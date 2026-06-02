@@ -10,38 +10,21 @@ permissions:
 
 jobs:
   release:
-    name: Build & release
+    name: GoReleaser
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        include:
-          - { goos: linux,   goarch: amd64,  suffix: linux-amd64   }
-          - { goos: linux,   goarch: arm64,  suffix: linux-arm64   }
-          - { goos: windows, goarch: amd64,  suffix: windows-amd64 }
-          - { goos: darwin,  goarch: amd64,  suffix: macos-amd64   }
-          - { goos: darwin,  goarch: arm64,  suffix: macos-arm64   }
-
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-go@v5
         with:
           go-version: stable
           cache: true
 
-      - name: Build binary
-        env:
-          GOOS: ${{ matrix.goos }}
-          GOARCH: ${{ matrix.goarch }}
-        run: |
-          EXT=""
-          if [ "$GOOS" = "windows" ]; then EXT=".exe"; fi
-          BINARY="url-${{ matrix.suffix }}${EXT}"
-          go build -ldflags="-s -w -X main.version=${GITHUB_REF_NAME}" -o "${BINARY}" .
-          echo "BINARY=${BINARY}" >> $GITHUB_ENV
-
-      - name: Upload to release
-        uses: softprops/action-gh-release@v2
+      - uses: goreleaser/goreleaser-action@v6
         with:
-          files: ${{ env.BINARY }}
-          generate_release_notes: true
+          version: "~> v2"
+          args: release --clean
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
