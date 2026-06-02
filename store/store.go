@@ -18,9 +18,13 @@ type Store struct {
 }
 
 func storePath() (string, error) {
-	dir, err := os.UserConfigDir()
-	if err != nil {
-		return "", err
+	dir := os.Getenv("XDG_CONFIG_HOME")
+	if dir == "" {
+		var err error
+		dir, err = os.UserConfigDir()
+		if err != nil {
+			return "", err
+		}
 	}
 	appDir := filepath.Join(dir, "urlstash")
 	if err := os.MkdirAll(appDir, 0755); err != nil {
