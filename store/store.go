@@ -18,11 +18,15 @@ type Store struct {
 }
 
 func storePath() (string, error) {
-	home, err := os.UserHomeDir()
+	dir, err := os.UserConfigDir()
 	if err != nil {
 		return "", err
 	}
-	return filepath.Join(home, ".urlstash.json"), nil
+	appDir := filepath.Join(dir, "urlstash")
+	if err := os.MkdirAll(appDir, 0755); err != nil {
+		return "", err
+	}
+	return filepath.Join(appDir, "store.json"), nil
 }
 
 func Load() (*Store, error) {
