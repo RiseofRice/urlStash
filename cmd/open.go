@@ -10,6 +10,21 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var openBrowserFn = defaultOpenBrowser
+
+func defaultOpenBrowser(url string) error {
+	var cmd *exec.Cmd
+	switch runtime.GOOS {
+	case "darwin":
+		cmd = exec.Command("open", url)
+	case "windows":
+		cmd = exec.Command("cmd", "/c", "start", url)
+	default:
+		cmd = exec.Command("xdg-open", url)
+	}
+	return cmd.Start()
+}
+
 var openCmd = &cobra.Command{
 	Use:   "open <label>",
 	Short: "opens the url in your Standard browser",
@@ -27,29 +42,15 @@ var openCmd = &cobra.Command{
 			return err
 		}
 
-		if err := openBrowser(entry.URL); err != nil {
+		if err := openBrowserFn(entry.URL); err != nil {
 			return fmt.Errorf("opening browser failed %w", err)
 		}
 
 		success := color.New(color.Attribute(148), color.Bold).SprintFunc()
 		urlColor := color.New(color.FgHiCyan).SprintFunc()
-		fmt.Printf("%s %s\n", success("Opening:"), urlColor(entry.URL))
+		fmt.Fprintf(cmd.OutOrStdout(), "%s %s\n", success("Opening:"), urlColor(entry.URL))
 		return nil
 	},
-}
-
-func openBrowser(url string) error {
-	var cmd *exec.Cmd
-	switch runtime.GOOS {
-	case "darwin":
-		cmd = exec.Command("open", url)
-	case "windows":
-		cmd = exec.Command("cmd", "/c", "start", url)
-	default:
-		cmd = exec.Command("xdg-open", url)
-	}
-
-	return cmd.Start()
 }
 
 func init() {

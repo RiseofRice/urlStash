@@ -20,7 +20,7 @@ var listCmd = &cobra.Command{
 		}
 
 		if len(s.Entries) == 0 {
-			fmt.Println("No saved Urls. Use url add <label> <url>")
+			fmt.Fprintln(cmd.OutOrStdout(), "No saved Urls. Use url add <label> <url>")
 			return nil
 		}
 
@@ -33,16 +33,16 @@ var listCmd = &cobra.Command{
 
 		header := color.New(color.FgHiYellow, color.Bold).SprintFunc()
 		separator := color.New(color.FgHiBlack).SprintFunc()
-		label := color.New(color.FgHiMagenta).SprintFunc()
-		url := color.New(color.FgHiCyan).SprintFunc()
+		labelColor := color.New(color.FgHiMagenta).SprintFunc()
+		urlColor := color.New(color.FgHiCyan).SprintFunc()
 
-		fmt.Printf("\n %s\n", header(fmt.Sprintf("%-*s URL", maxLen, "LABEL")))
-		fmt.Printf(" %s\n", separator(strings.Repeat("-", maxLen+50)))
+		fmt.Fprintf(cmd.OutOrStdout(), "\n %s\n", header(fmt.Sprintf("%-*s URL", maxLen, "LABEL")))
+		fmt.Fprintf(cmd.OutOrStdout(), " %s\n", separator(strings.Repeat("-", maxLen+50)))
 		for _, e := range s.Entries {
 			padding := strings.Repeat(" ", maxLen-len(e.Label))
-			fmt.Printf(" %s%s %s\n", label(e.Label), padding, url(e.URL))
+			fmt.Fprintf(cmd.OutOrStdout(), " %s%s %s\n", labelColor(e.Label), padding, urlColor(e.URL))
 		}
-		fmt.Println()
+		fmt.Fprintln(cmd.OutOrStdout())
 		return nil
 	},
 }

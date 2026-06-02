@@ -12,6 +12,26 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var copyToClipboardFn = defaultCopyToClipboard
+
+func defaultCopyToClipboard(text string) error {
+	var cmd *exec.Cmd
+	switch runtime.GOOS {
+	case "darwin":
+		cmd = exec.Command("pbcopy")
+	case "windows":
+		cmd = exec.Command("cmd", "/c", "clip")
+	default:
+		if os.Getenv("WAYLAND_DISPLAY") != "" {
+			cmd = exec.Command("wl-copy")
+		} else {
+			cmd = exec.Command("xclip", "-selection", "clipboard")
+		}
+	}
+	cmd.Stdin = strings.NewReader(text)
+	return cmd.Run()
+}
+
 var copyCmd = &cobra.Command{
 	Use:     "copy <label>",
 	Short:   "copies the url of the given Label",
@@ -30,36 +50,15 @@ var copyCmd = &cobra.Command{
 			return err
 		}
 
-		if err := copytoClipboard(entry.URL); err != nil {
+		if err := copyToClipboardFn(entry.URL); err != nil {
 			return fmt.Errorf("copy failed: %w", err)
 		}
 
 		success := color.New(color.Attribute(148), color.Bold).SprintFunc()
 		urlColor := color.New(color.FgHiCyan).SprintFunc()
-		fmt.Printf("%s %s\n", success("Copied:"), urlColor(entry.URL))
+		fmt.Fprintf(cmd.OutOrStdout(), "%s %s\n", success("Copied:"), urlColor(entry.URL))
 		return nil
-
 	},
-}
-
-func copytoClipboard(text string) error {
-	var cmd *exec.Cmd
-
-	switch runtime.GOOS {
-	case "darwin":
-		cmd = exec.Command("pbcopy")
-	case "windows":
-		cmd = exec.Command("cmd", "/c", "clip")
-	default:
-		if os.Getenv("WAYLAND_DISPLAY") != "" {
-			cmd = exec.Command("wl-copy")
-		} else {
-			cmd = exec.Command("xclip", "-selection", "clipboard")
-		}
-	}
-
-	cmd.Stdin = strings.NewReader(text)
-	return cmd.Run()
 }
 
 func init() {

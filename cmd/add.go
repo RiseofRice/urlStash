@@ -32,7 +32,7 @@ var addCmd = &cobra.Command{
 		success := color.New(color.Attribute(148), color.Bold).SprintFunc()
 		labelColor := color.New(color.FgHiMagenta).SprintFunc()
 		urlColor := color.New(color.FgHiCyan).SprintFunc()
-		fmt.Printf("%s %s -> %s\n", success("Saved:"), labelColor(label), urlColor(url))
+		fmt.Fprintf(cmd.OutOrStdout(), "%s %s -> %s\n", success("Saved:"), labelColor(label), urlColor(url))
 		return nil
 	},
 }

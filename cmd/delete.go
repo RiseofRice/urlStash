@@ -31,7 +31,7 @@ var deleteCmd = &cobra.Command{
 
 		success := color.New(color.Attribute(148), color.Bold).SprintFunc()
 		labelColor := color.New(color.FgHiMagenta).SprintFunc()
-		fmt.Printf("%s %s\n", success("Deleted:"), labelColor(label))
+		fmt.Fprintf(cmd.OutOrStdout(), "%s %s\n", success("Deleted:"), labelColor(label))
 		return nil
 	},
 }

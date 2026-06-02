@@ -7,8 +7,7 @@ import (
 
 func withTempHome(t *testing.T) {
 	t.Helper()
-	dir := t.TempDir()
-	t.Setenv("HOME", dir)
+	t.Setenv("XDG_CONFIG_HOME", t.TempDir())
 }
 
 func TestLoad_NoFile(t *testing.T) {
