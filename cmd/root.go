@@ -1,5 +1,7 @@
 package cmd
 
+// This is a package Comment
+
 import (
 	"fmt"
 	"os"
@@ -19,7 +21,12 @@ var rootCmd = &cobra.Command{
 
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		os.Exit(1)
 	}
+}
+
+func init() {
+	rootCmd.SilenceErrors = true
+	rootCmd.SilenceUsage = true
 }

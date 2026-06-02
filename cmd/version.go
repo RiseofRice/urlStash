@@ -12,7 +12,7 @@ var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "Shows the actual version",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("urlStash", version)
+		fmt.Fprintln(cmd.OutOrStdout(), "urlStash", version)
 	},
 }
 

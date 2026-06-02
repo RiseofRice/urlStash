@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/RiseofRice/urlStash/store"
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
 
@@ -28,7 +29,10 @@ var addCmd = &cobra.Command{
 			return fmt.Errorf("failed to save the storage: %w", err)
 		}
 
-		fmt.Printf("Saved: %s -> %s\n", label, url)
+		success := color.New(color.Attribute(148), color.Bold).SprintFunc()
+		labelColor := color.New(color.FgHiMagenta).SprintFunc()
+		urlColor := color.New(color.FgHiCyan).SprintFunc()
+		fmt.Fprintf(cmd.OutOrStdout(), "%s %s -> %s\n", success("Saved:"), labelColor(label), urlColor(url))
 		return nil
 	},
 }
