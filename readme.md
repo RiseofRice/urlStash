@@ -190,8 +190,6 @@ MIT — see [LICENSE](LICENSE).
 
 urlstash is built on the shoulders of two excellent Go libraries:
 
-- [**spf13/cobra**](https://github.com/spf13/cobra) by Steve Francia — the CLI framework that powers some of the most widely used Go tools out there (kubectl, Hugo, GitHub CLI, and more). Cobra made building a well-structured CLI with subcommands, aliases, and help text straightforward and enjoyable.
+- [**spf13/cobra**](https://github.com/spf13/cobra) by Steve Francia
 
-- [**fatih/color**](https://github.com/fatih/color) by Fatih Arslan — a clean, expressive package for colorized terminal output that just works, including full Windows support via `go-colorable`. The colored output in urlstash is entirely thanks to this library.
-
-Big thanks to both maintainers for their work and for keeping these projects open source.
+- [**fatih/color**](https://github.com/fatih/color) by Fatih Arslan
