@@ -26,6 +26,132 @@ url list
 
 ## Installation
 
+### Download from Releases (recommended)
+
+Head to the [Releases page](https://github.com/RiseofRice/urlStash/releases) and download the binary for your platform:
+
+| Platform | File to download |
+|----------|-----------------|
+| Windows (64-bit) | `urlstash_windows_amd64.exe` |
+| macOS (Intel) | `urlstash_darwin_amd64` |
+| macOS (Apple Silicon) | `urlstash_darwin_arm64` |
+| Linux (64-bit) | `urlstash_linux_amd64` |
+| Linux (ARM64) | `urlstash_linux_arm64` |
+
+---
+
+#### Windows
+
+1. Download `url_windows_amd64.exe` and rename it to `url.exe`.
+2. Move it to a folder on your `PATH`. A simple option is `C:\Windows\System32`:
+
+   ```powershell
+   # Run PowerShell as Administrator
+   Move-Item .\url.exe C:\Windows\System32\url.exe
+   ```
+
+   **Or** add a custom folder to your `PATH`:
+
+   ```powershell
+   # Create a bin folder (once)
+   New-Item -ItemType Directory -Force "$HOME\bin"
+
+   # Move the binary there
+   Move-Item .\url.exe "$HOME\bin\url.exe"
+
+   # Add to PATH for current user (permanent)
+   [Environment]::SetEnvironmentVariable(
+     "PATH",
+     "$env:PATH;$HOME\bin",
+     "User"
+   )
+   ```
+
+   Restart your terminal, then verify:
+
+   ```powershell
+   url version
+   ```
+
+---
+
+#### macOS
+
+1. Download the correct binary for your chip (`amd64` for Intel, `arm64` for Apple Silicon).
+2. Rename it and make it executable:
+
+   ```sh
+   mv url_darwin_arm64 url          # or url_darwin_amd64
+   chmod +x url
+   ```
+
+3. Move it onto your `PATH`:
+
+   ```sh
+   sudo mv url /usr/local/bin/url
+   ```
+
+   If you'd rather not use `sudo`, put it in `~/bin` instead:
+
+   ```sh
+   mkdir -p ~/bin
+   mv url ~/bin/url
+
+   # Bash — add to ~/.bashrc or ~/.bash_profile
+   echo 'export PATH="$HOME/bin:$PATH"' >> ~/.bashrc && source ~/.bashrc
+
+   # Zsh — add to ~/.zshrc
+   echo 'export PATH="$HOME/bin:$PATH"' >> ~/.zshrc && source ~/.zshrc
+   ```
+
+4. On macOS you may need to allow the binary through Gatekeeper the first time:
+
+   ```sh
+   xattr -d com.apple.quarantine /usr/local/bin/url
+   ```
+
+   Or: right-click the file in Finder → **Open** → **Open** to approve it once.
+
+5. Verify:
+
+   ```sh
+   url version
+   ```
+
+---
+
+#### Linux
+
+1. Download `url_linux_amd64` (or `url_linux_arm64` for ARM).
+2. Rename, make executable, and move it onto your `PATH`:
+
+   ```sh
+   mv url_linux_amd64 url
+   chmod +x url
+   sudo mv url /usr/local/bin/url
+   ```
+
+   Without `sudo`, use a user-local bin directory:
+
+   ```sh
+   mkdir -p ~/.local/bin
+   mv url ~/.local/bin/url
+
+   # Add to PATH if not already present (Bash)
+   echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc && source ~/.bashrc
+
+   # Or for Zsh
+   echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc && source ~/.zshrc
+   ```
+
+3. Verify:
+
+   ```sh
+   url version
+   ```
+
+---
+
 ### Build from source
 
 You need [Go](https://go.dev/dl/) installed (1.21 or later).
@@ -36,15 +162,7 @@ cd urlStash
 go build -o url .
 ```
 
-Move the binary somewhere on your `PATH`:
-
-```sh
-# Linux / macOS
-mv url /usr/local/bin/url
-
-# Windows (PowerShell — run as Administrator)
-Move-Item url.exe C:\Windows\System32\url.exe
-```
+Move the binary somewhere on your `PATH` using the same steps shown above for your platform.
 
 ---
 
